@@ -23,3 +23,45 @@ function processUserInput(chatApp, socket){
 
   $('#send-message').val()
 }
+
+var socket = io.connect();
+$(document).ready(function(){
+  var chatApp = new (socket);
+
+  socket.on('nameResult', function(result){
+    var message;
+
+    if(result.successs){
+      message = 'u are now known as ' + result.name + '.'
+    } else {
+      message = result.message;
+    }
+    $('#message').append(divSystemContentElement(message));
+  })
+
+  socket.on('joinResult', function(result){
+    $('#room').text(result.room);
+    $('#message').append(divSystemContentElement('room changed'));
+  })
+
+  socket.on('message', function(message){
+    var newElement = $('<div></div>').text(message.text);
+    $('#message').append(newElement);
+  })
+
+  socket.on('rooms', function(rooms){
+    $('#room-list').empty();
+    
+    for (var room in rooms) {
+      room = room.substring(1, room.length);
+      if(room != '') {
+        $('#room-list').append(divEscapedContentElement(room));
+      }
+    }
+    $('#room-list div').click(function(){
+      
+    })
+  })
+
+})
+socket.on
